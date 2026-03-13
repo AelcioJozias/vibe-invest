@@ -16,7 +16,7 @@ The goal is to build a maintainable API without frameworks, avoiding unnecessary
 - Migrations: SQL migrations managed by a Go migration tool
 - Logging: `log/slog`
 - Configuration: environment variables
-- Testing: Go standard library with `testing` and `httptest`
+- Testing: Go standard library with `testing` and `httptest`, plus PostgreSQL integration tests
 
 ## What We Will Not Use
 
@@ -182,6 +182,18 @@ Comments should explain:
 
 Comments should not explain obvious syntax.
 
+## Testing Philosophy
+
+Testing is a priority in this project.
+
+Rules:
+
+- TDD is the default workflow for new code.
+- BDD is required for business use cases and acceptance behavior.
+- Integration tests against PostgreSQL are mandatory for regression safety.
+- Every bug fix should include a regression test before the fix is considered done.
+- Pull requests should prefer adding tests first, then implementation.
+
 ## Initial Development Order
 
 1. Bootstrap HTTP server
@@ -191,7 +203,7 @@ Comments should not explain obvious syntax.
 5. Implement accounts feature
 6. Implement investments feature
 7. Implement portfolio summary dashboard
-8. Add tests for handlers, services, and repositories where valuable
+8. Implement and keep regression-focused tests (unit, handler, and integration)
 
 ## API Direction
 

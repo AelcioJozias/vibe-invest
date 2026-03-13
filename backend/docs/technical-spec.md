@@ -119,14 +119,33 @@ Rules:
 
 ## Testing Strategy
 
+Testing is mandatory and prioritized over delivery speed.
+
+Development workflow:
+
+- TDD first: write a failing test before writing production code.
+- BDD for behavior-driven scenarios: business rules must be described as executable behavior tests.
+
+Required test layers:
+
 - Unit tests for service business rules.
 - Handler tests using httptest.
 - Repository tests against PostgreSQL (integration profile).
-- Priority tests:
-  - movement classification
-  - month-over-month calculation
-  - soft delete filtering
-  - cents conversion and aggregation
+- End-to-end integration tests for critical API flows.
+
+Regression policy:
+
+- Keep a stable integration regression suite that runs regularly.
+- Every production bug must add a regression test reproducing the issue.
+- No feature is complete without at least one test path covering expected behavior.
+
+Priority tests:
+
+- movement classification
+- month-over-month calculation
+- soft delete filtering
+- cents conversion and aggregation
+- portfolio summary aggregation consistency
 
 ## Non-goals for Phase 1
 
