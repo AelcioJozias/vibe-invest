@@ -1,0 +1,136 @@
+openapi: 3.0.0
+servers:
+  - description: Vibe API
+    url: https://localhost:8080
+info:
+  description: Vibe Invest Api Contract
+  version: "1.0.0"
+  title: Vibe Invest - API
+  contact:
+    email: aelciojoziasp@gmail.com
+  license:
+    name: Apache 2.0
+    url: 'http://www.apache.org/licenses/LICENSE-2.0.html'
+tags:
+  - name: accounts
+    description: Manage accounts
+  - name: investiments
+    description: Handle crud operations for investments
+  - name: portfolio
+    description: Aggregated portfolio and dashboard data
+paths:
+  /api/v1/accounts:
+    $ref: './paths/accounts.yaml#/accountsCollection'
+
+  /api/v1/accounts/{id}:
+    $ref: './paths/accounts.yaml#/accountById'
+
+  /api/v1/portfolio/summary:
+    $ref: './paths/dashboard.yaml#/portfolioSummary'
+
+  /api/v1/accounts/{accountId}/investiments:
+    $ref: './paths/investiments.yaml#/investimentsByAccount'
+
+  /api/v1/investiments/{investmentId}:
+    $ref: './paths/investiments.yaml#/investmentById'
+
+  /api/v1/investiments/{investmentId}/fees:
+    $ref: './paths/investiments.yaml#/investmentFeesById'
+
+
+components:
+
+  responses:
+    BadRequestProblem:
+      description: Bad request
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/ProblemDetails'
+          example:
+            type: https://vibe-invest.dev/errors/bad-request
+            title: Bad Request
+            status: 400
+            detail: One or more request fields are invalid.
+            instance: /api/v1/example
+
+    NotFoundProblem:
+      description: Resource not found
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/ProblemDetails'
+          example:
+            type: https://vibe-invest.dev/errors/not-found
+            title: Not Found
+            status: 404
+            detail: The requested resource was not found.
+            instance: /api/v1/example/123
+
+    ConflictProblem:
+      description: Conflict
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/ProblemDetails'
+          example:
+            type: https://vibe-invest.dev/errors/conflict
+            title: Conflict
+            status: 409
+            detail: Conflict detail message.
+            instance: /api/v1/example
+
+  schemas:
+    AccountRequest:
+      $ref: './paths/accounts.yaml#/components/schemas/AccountRequest'
+
+    AccountResponse:
+      $ref: './paths/accounts.yaml#/components/schemas/AccountResponse'
+
+    PortfolioDashboardResponse:
+      $ref: './paths/dashboard.yaml#/components/schemas/PortfolioDashboardResponse'
+
+    CreateInvestmentRequest:
+      $ref: './paths/investiments.yaml#/components/schemas/CreateInvestmentRequest'
+
+    UpdateInvestmentRequest:
+      $ref: './paths/investiments.yaml#/components/schemas/UpdateInvestmentRequest'
+
+    IncrementInvestmentFeesRequest:
+      $ref: './paths/investiments.yaml#/components/schemas/IncrementInvestmentFeesRequest'
+
+    InvestmentResponse:
+      $ref: './paths/investiments.yaml#/components/schemas/InvestmentResponse'
+
+    ProblemDetails:
+      type: object
+      description: RFC 7807 Problem Details error response.
+      required:
+        - type
+        - title
+        - status
+      properties:
+        type:
+          type: string
+          format: uri
+          description: A URI reference that identifies the problem type.
+          example: https://vibe-invest.dev/errors/validation
+        title:
+          type: string
+          description: A short, human-readable summary of the problem type.
+          example: Validation Error
+        status:
+          type: integer
+          format: int32
+          description: The HTTP status code.
+          example: 400
+        detail:
+          type: string
+          description: A human-readable explanation specific to this occurrence.
+          example: Field 'name' is required.
+        instance:
+          type: string
+          format: uri-reference
+          description: A URI reference that identifies the specific occurrence.
+          example: /api/v1/accounts
+      additionalProperties: true

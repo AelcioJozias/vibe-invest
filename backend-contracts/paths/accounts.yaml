@@ -1,0 +1,139 @@
+accountsCollection:
+  get:
+    tags:
+      - accounts
+    summary: List accounts
+    operationId: listAccounts
+    description: Returns a list of accounts.
+    parameters:
+      - in: query
+        name: searchString
+        description: pass an optional search string for looking up inventory
+        required: false
+        schema:
+          type: string
+    responses:
+      '200':
+        description: list of accounts
+        content:
+          application/json:
+            schema:
+              type: array
+              items:
+                $ref: '#/components/schemas/AccountResponse'
+      '400':
+        $ref: '../openapi.yaml#/components/responses/BadRequestProblem'
+
+  post:
+    tags:
+      - accounts
+    summary: Create an Account
+    operationId: createAccount
+    description: Create an Account
+    responses:
+      '201':
+        description: account created
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AccountResponse'
+      '400':
+        $ref: '../openapi.yaml#/components/responses/BadRequestProblem'
+      '409':
+        $ref: '../openapi.yaml#/components/responses/ConflictProblem'
+    requestBody:
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/AccountRequest'
+      description: Account payload to add
+
+accountById:
+  put:
+    tags:
+      - accounts
+    summary: Update account data
+    operationId: updateAccount
+    description: Updates only the account name and returns the updated account body.
+    parameters:
+      - in: path
+        name: id
+        required: true
+        description: Account id
+        schema:
+          type: integer
+          format: int64
+    requestBody:
+      required: true
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/AccountRequest'
+    responses:
+      '200':
+        description: account updated
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AccountResponse'
+      '400':
+        $ref: '../openapi.yaml#/components/responses/BadRequestProblem'
+      '404':
+        $ref: '../openapi.yaml#/components/responses/NotFoundProblem'
+
+  delete:
+    tags:
+      - accounts
+    summary: Delete account
+    operationId: deleteAccount
+    description: Deactivates an account by id (logical delete).
+    parameters:
+      - in: path
+        name: id
+        required: true
+        description: Account id
+        schema:
+          type: integer
+          format: int64
+    responses:
+      '204':
+        description: account deleted
+      '404':
+        $ref: '../openapi.yaml#/components/responses/NotFoundProblem'
+
+components:
+  schemas:
+    AccountRequest:
+      type: object
+      required:
+        - name
+      properties:
+        name:
+          type: string
+          example: Nu Bank
+
+    AccountResponse:
+      type: object
+      required:
+        - id
+        - name
+        - amount
+        - isActive
+      properties:
+        id:
+          type: integer
+          format: int64
+          example: 123
+        name:
+          type: string
+          example: Nu Bank
+        amount:
+          type: integer
+          format: int64
+          description: Account total amount in cents.
+          example: 100012
+        isActive:
+          type: boolean
+          description: Indicates whether the account is active.
+          default: true
+          example: true

@@ -1,0 +1,86 @@
+portfolioSummary:
+  get:
+    tags:
+      - portfolio
+    summary: Get portfolio summary dashboard
+    operationId: getPortfolioSummary
+    description: Returns aggregated investment data across all accounts for the home dashboard.
+    parameters:
+      - in: query
+        name: referenceMonth
+        required: false
+        description: Reference month for the dashboard in YYYY-MM format.
+        schema:
+          type: string
+          example: 2026-08
+    responses:
+      '200':
+        description: portfolio dashboard data
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PortfolioDashboardResponse'
+
+components:
+  schemas:
+    PortfolioDashboardResponse:
+      type: object
+      required:
+        - referenceMonth
+        - totalInvestedAmount
+        - totalMonthlyYieldAmount
+        - totalMonthlyContributions
+        - previousMonthTotalAmount
+        - portfolioGrowthAmount
+        - averageMonthlyYieldRate
+      properties:
+        referenceMonth:
+          type: string
+          description: Reference month for the returned metrics.
+          example: 2026-08
+        totalInvestedAmount:
+          type: integer
+          format: int64
+          description: Current total invested amount for the reference month across all accounts, in cents.
+          example: 10057820
+        totalMonthlyYieldAmount:
+          type: integer
+          format: int64
+          description: Total amount earned from yields in the reference month across all accounts, in cents.
+          example: 12000
+        totalMonthlyContributions:
+          type: integer
+          format: int64
+          description: Sum of all contributions made during the reference month, in cents.
+          example: 40000
+        previousMonthTotalAmount:
+          type: integer
+          format: int64
+          description: Total invested amount carried from the previous month, in cents.
+          example: 9957820
+        portfolioGrowthAmount:
+          type: integer
+          format: int64
+          description: Total portfolio growth considering contributions and yields, in cents.
+          example: 60000
+        averageMonthlyYieldRate:
+          type: number
+          format: double
+          description: Average yield rate across investments in the reference month.
+          example: 2.0
+        topYieldInvestment:
+          type: object
+          description: Investment with the highest yield amount in the reference month.
+          properties:
+            investmentId:
+              type: integer
+              format: int64
+              example: 987
+            name:
+              type: string
+              example: CDB Banco Inter
+            yieldAmount:
+              type: integer
+              format: int64
+              description: Yield amount of the top investment, in cents.
+              example: 12000

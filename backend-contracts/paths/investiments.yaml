@@ -1,0 +1,245 @@
+investimentsByAccount:
+  get:
+    tags:
+      - investiments
+    summary: List investments by account
+    operationId: listInvestmentsByAccountId
+    description: Retrieve a list of investments for the given account.
+    parameters:
+      - in: path
+        name: accountId
+        required: true
+        description: Account id
+        schema:
+          type: integer
+          format: int64
+    responses:
+      '200':
+        description: A list of investments for the account
+        content:
+          application/json:
+            schema:
+              type: array
+              items:
+                $ref: '#/components/schemas/InvestmentResponse'
+      '404':
+        $ref: '../openapi.yaml#/components/responses/NotFoundProblem'
+
+  post:
+    tags:
+      - investiments
+    summary: Create investment for account
+    operationId: createInvestment
+    description: Creates a new investment linked to the given account id.
+    parameters:
+      - in: path
+        name: accountId
+        required: true
+        description: Account id
+        schema:
+          type: integer
+          format: int64
+    requestBody:
+      required: true
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/CreateInvestmentRequest'
+      description: Investment payload to add
+    responses:
+      '201':
+        description: investment created
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/InvestmentResponse'
+      '400':
+        $ref: '../openapi.yaml#/components/responses/BadRequestProblem'
+      '404':
+        $ref: '../openapi.yaml#/components/responses/NotFoundProblem'
+
+investmentById:
+  get:
+    tags:
+      - investiments
+    summary: Get investment by id
+    operationId: getInvestmentById
+    description: Retrieves one investment by its id.
+    parameters:
+      - in: path
+        name: investmentId
+        required: true
+        description: Investment id
+        schema:
+          type: integer
+          format: int64
+    responses:
+      '200':
+        description: investment found
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/InvestmentResponse'
+      '404':
+        $ref: '../openapi.yaml#/components/responses/NotFoundProblem'
+
+  put:
+    tags:
+      - investiments
+    summary: Update investment
+    operationId: updateInvestment
+    description: Updates an investment and returns the updated investment body.
+    parameters:
+      - in: path
+        name: investmentId
+        required: true
+        description: Investment id
+        schema:
+          type: integer
+          format: int64
+    requestBody:
+      required: true
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/UpdateInvestmentRequest'
+    responses:
+      '200':
+        description: investment updated
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/InvestmentResponse'
+      '400':
+        $ref: '../openapi.yaml#/components/responses/BadRequestProblem'
+      '404':
+        $ref: '../openapi.yaml#/components/responses/NotFoundProblem'
+
+  delete:
+    tags:
+      - investiments
+    summary: Delete investment
+    operationId: deleteInvestment
+    description: Deactivates an investment by id (logical delete).
+    parameters:
+      - in: path
+        name: investmentId
+        required: true
+        description: Investment id
+        schema:
+          type: integer
+          format: int64
+    responses:
+      '204':
+        description: investment deleted
+      '404':
+        $ref: '../openapi.yaml#/components/responses/NotFoundProblem'
+
+investmentFeesById:
+  put:
+    tags:
+      - investiments
+    summary: Increment investment fees
+    operationId: updateInvestmentFees
+    description: Adds the provided amount to the current investment amount and returns the updated investment.
+    parameters:
+      - in: path
+        name: investmentId
+        required: true
+        description: Investment id
+        schema:
+          type: integer
+          format: int64
+    requestBody:
+      required: true
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/IncrementInvestmentFeesRequest'
+      description: Amount to add to the current investment value
+    responses:
+      '200':
+        description: investment updated
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/InvestmentResponse'
+      '400':
+        $ref: '../openapi.yaml#/components/responses/BadRequestProblem'
+      '404':
+        $ref: '../openapi.yaml#/components/responses/NotFoundProblem'
+
+components:
+  schemas:
+    CreateInvestmentRequest:
+      type: object
+      required:
+        - amount
+        - yieldRate
+      properties:
+        amount:
+          type: integer
+          format: int64
+          description: Investment amount in cents.
+          example: 155012
+        yieldRate:
+          type: string
+          example: 107% do CDI
+        observation:
+          type: string
+          example: "Investimento de aniversário"
+
+    UpdateInvestmentRequest:
+      type: object
+      required:
+        - amount
+        - yieldRate
+      properties:
+        amount:
+          type: integer
+          format: int64
+          description: Investment amount in cents.
+          example: 180050
+        yieldRate:
+          type: string
+          example: 110% do CDI
+        observation:
+          type: string
+          example: "Aporte extra para reserva"
+
+    IncrementInvestmentFeesRequest:
+      type: object
+      required:
+        - amount
+      properties:
+        amount:
+          type: integer
+          format: int64
+          description: Amount to increment in cents.
+          example: 2575
+
+    InvestmentResponse:
+      type: object
+      required:
+        - id
+        - amount
+        - yieldRate
+        - isActive
+      properties:
+        id:
+          type: integer
+          format: int64
+          example: 123
+        amount:
+          type: integer
+          format: int64
+          description: Current investment amount in cents.
+          example: 155012
+        yieldRate:
+          type: string
+          example: 107% do CDI
+        isActive:
+          type: boolean
+          description: Indicates whether the investment is active.
+          default: true
+          example: true
