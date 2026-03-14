@@ -8,10 +8,12 @@ Backend API built with Go (standard library + PostgreSQL), following the contrac
 - net/http (no framework)
 - PostgreSQL
 - pgx / pgxpool
+- golang-migrate (iofs source)
 
 ## Project Structure
 
 - cmd/api: executable entrypoint
+- cmd/migrate: migration command (up/down)
 - internal/account: account feature (handler, service, repository, model)
 - internal/investment: investment feature (handler, service, repository, model)
 - internal/dashboard: portfolio summary feature
@@ -33,7 +35,7 @@ Example (`.env`):
 ```env
 DATABASE_URL=postgres://postgres:postgres@localhost:5432/app_db?sslmode=disable
 PORT=8080
-CORS_ALLOW_ORIGIN=http://localhost:8080
+CORS_ALLOW_ORIGIN=*
 ```
 
 If you prefer shell variables, use:
@@ -49,7 +51,7 @@ $env:CORS_ALLOW_ORIGIN="http://localhost:8080"
 From backend folder:
 
 ```powershell
-go run .
+make run
 ```
 
 Or:
@@ -78,26 +80,30 @@ Or without make:
 go run ./cmd/migrate up
 ```
 
-Roll back:
+Roll back command available:
 
 ```powershell
 make migrate-down
 ```
 
+Current migration status:
+
+- Embedded migration files currently include only `0001_init_schema.up.sql`
+- `migrate-down` exists in the command interface, but requires `*.down.sql` files to effectively rollback schema changes
+
 Migration files:
 
 - migrations/0001_init_schema.up.sql
-- migrations/0001_init_schema.down.sql
 
 Main conventions:
 
 - soft delete with is_active
 - monetary values stored as integer cents (BIGINT)
 - movement_type values:
-  - INVESTMENT_CREATED
-  - CONTRIBUTION
-  - INTEREST
-  - ADJUSTMENT
+  - `INVESTMENT_CREATED`
+  - `CONTRIBUTION`
+  - `INTEREST`
+  - `ADJUSTMENT`
 
 ## Implemented Endpoints
 
@@ -120,6 +126,12 @@ Investiments:
 Portfolio:
 
 - GET /api/v1/portfolio/summary?referenceMonth=YYYY-MM
+
+## API Behavior Notes
+
+- List accounts supports optional query param: `searchString`
+- Dashboard summary requires `referenceMonth` in `YYYY-MM`
+- CORS headers are only applied when `CORS_ALLOW_ORIGIN` is configured
 
 ## Tests
 

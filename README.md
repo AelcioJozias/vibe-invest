@@ -1,21 +1,22 @@
 # Vibe Invest
 
-Personal project to learn backend development with Go while building an investment tracking API.
+Learning project to build an investment tracking API with Go and PostgreSQL.
 
-## Project Structure
+## Repository Structure
 
-- backend: Go backend implementation
-- backend-contracts: OpenAPI contracts
+- backend: Go API (net/http + pgx)
+- backend-contracts: OpenAPI contract
+- docs: commit convention
 
-## Current Status
+## Backend
 
-- API contracts are being modeled first
-- Backend architecture and business rules are documented
-- Database model is defined in Mermaid
+For backend technical details, endpoints, local run instructions, migrations, and tests, see:
 
-## Docs
+- [backend/README.md](backend/README.md)
 
-Main docs are in backend/docs:
+## Documentation
+
+Backend technical documentation in backend/docs:
 
 - architecture.md
 - technical-spec.md
@@ -23,18 +24,6 @@ Main docs are in backend/docs:
 - dashboard-calculation-rules.md
 - business-rules/
 
-Project-level docs are in docs:
+Repository commit convention:
 
-- commit-convention.md
-
-## Commit Pattern
-
-This repository uses Conventional Commits as the required commit message standard.
-
-See docs/commit-convention.md for rules and examples.
-
-## Next Steps
-
-- Create SQL migrations
-- Bootstrap HTTP server and database connection
-- Implement accounts, investments, and portfolio summary endpoints
+- docs/commit-convention.md
