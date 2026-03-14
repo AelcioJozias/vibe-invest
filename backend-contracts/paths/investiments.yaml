@@ -184,10 +184,10 @@ components:
           example: 155012
         yieldRate:
           type: string
-          example: 107% do CDI
+          example: 107% CDI
         observation:
           type: string
-          example: "Investimento de aniversário"
+          example: "Birthday investment"
 
     UpdateInvestmentRequest:
       type: object
@@ -202,10 +202,10 @@ components:
           example: 180050
         yieldRate:
           type: string
-          example: 110% do CDI
+          example: 110% CDI
         observation:
           type: string
-          example: "Aporte extra para reserva"
+          example: "Extra contribution for reserves"
 
     IncrementInvestmentFeesRequest:
       type: object
@@ -237,7 +237,7 @@ components:
           example: 155012
         yieldRate:
           type: string
-          example: 107% do CDI
+          example: 107% CDI
         isActive:
           type: boolean
           description: Indicates whether the investment is active.

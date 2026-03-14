@@ -35,7 +35,7 @@ Examples:
 ## Examples to Avoid
 
 - update files
-- ajustes
+- minor adjustments
 - fix stuff
 - commit final
 
